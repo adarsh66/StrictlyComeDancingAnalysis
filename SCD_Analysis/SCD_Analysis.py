@@ -47,12 +47,21 @@ def main():
     avg_by_week = df.groupby(['Week'])['NormalizedTotal'].mean()
     avg_by_series = df.groupby(['Series'])['NormalizedTotal'].mean()
 
-    
+    #Normalizing Dance types where we have two dance types
+    df['Dance_Type_1'] = df['Dance'].str.split('and').apply(pd.Series)[0].str.strip()
+    df['Dance_Type_2'] = df['Dance'].str.split('and').apply(pd.Series)[1].str.strip()
 
+    #ugly hack to remove the difference due to case diff
+    df['Dance_Type_1'] = df['Dance_Type_1'].str.replace('waltz', 'Waltz')
+    df['Dance_Type_1'] = df['Dance_Type_1'].str.replace('cha', 'Cha')
+    #prints out the distinct list of dance types 1.
+    df['Dance_Type_1'].unique()
 
+    #stats for noramlized scores for different dance types over the seaasons
+    df.groupby([ 'Dance_Type_1', 'Series'])['NormalizedTotal'].mean()
 
-
-
+    #count of the different dance types over Series
+    df.groupby([ 'Series',])['Dance_Type_1'].value_counts()
 
 
 
